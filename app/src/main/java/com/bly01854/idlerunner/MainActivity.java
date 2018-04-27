@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.bly01854.idlerunner.database.AppDatabase;
 import com.bly01854.idlerunner.entity.User;
 
+import java.text.DecimalFormat;
 import java.util.concurrent.ThreadLocalRandom;
 /*
 Bailey Henson
@@ -62,6 +63,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     boolean energyDrinkActive;
     int activeSteps;
     int cooldownSteps;
+
+    // Formatting
+    DecimalFormat format = new DecimalFormat("0.#");
 
 
     @Override
@@ -193,13 +197,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             tv_steps.setText(String.valueOf(user.getSteps()));
             // Update Views
             tv_shoes.setText("Running Shoes  x" + user.getRunningShoes());
-            bt_shoes.setText((((user.getRunningShoes() + 1) * 30) * (double)(1 + (user.getRunningShoes() / 5))) + "");
+            bt_shoes.setText(format.format(((user.getRunningShoes() + 1) * 30) * (double)(1 + (user.getRunningShoes() / 5))) + "");
             tv_drink.setText("Energy Drink  x" + user.getEnergyDrink());
-            bt_drink.setText(((user.getEnergyDrink() + 1) * 150) * (double)(1 + (user.getEnergyDrink() / 4)) + "");
+            bt_drink.setText(format.format(((user.getEnergyDrink() + 1) * 150) * (double)(1 + (user.getEnergyDrink() / 4))) + "");
             tv_joggers.setText("Joggers  x" + user.getJoggers());
-            bt_joggers.setText(((user.getJoggers() + 1) * 300) * (double)(1 + (user.getJoggers() / 4)) + "");
+            bt_joggers.setText(format.format(((user.getJoggers() + 1) * 300) * (double)(1 + (user.getJoggers() / 4))) + "");
             tv_breeze.setText("Cool Breeze  x" + user.getCoolBreeze());
-            bt_breeze.setText(((user.getCoolBreeze() + 1) * 500) * (double)(1 + (user.getCoolBreeze() / 3)) + "");
+            bt_breeze.setText(format.format(((user.getCoolBreeze() + 1) * 500) * (double)(1 + (user.getCoolBreeze() / 3))) + "");
 
             if (user.getEnergyDrink() < 1)
                 bt_activateEnergy.setVisibility(View.INVISIBLE);
@@ -356,7 +360,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             user.setRunningShoes(user.getRunningShoes() + 1);
             tv_steps.setText(String.valueOf(user.getSteps()));
             tv_shoes.setText("Running Shoes  x" + user.getRunningShoes());
-            bt_shoes.setText((((user.getRunningShoes() + 1) * 30) * (double)(1 + (user.getRunningShoes() / 5))) + "");
+            bt_shoes.setText(format.format(((user.getRunningShoes() + 1) * 30) * (double)(1 + (user.getRunningShoes() / 5))) + "");
         }
 
     }
@@ -366,7 +370,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             user.setEnergyDrink(user.getEnergyDrink() + 1);
             tv_steps.setText(String.valueOf(user.getSteps()));
             tv_drink.setText("Energy Drink  x" + user.getEnergyDrink());
-            bt_drink.setText(((user.getEnergyDrink() + 1) * 150) * (double)(1 + (user.getEnergyDrink() / 4)) + "");
+            bt_drink.setText(format.format(((user.getEnergyDrink() + 1) * 150) * (double)(1 + (user.getEnergyDrink() / 4))) + "");
             bt_activateEnergy.setVisibility(View.VISIBLE);
             bt_activateEnergy.setEnabled(true);
         }
@@ -377,7 +381,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             user.setJoggers(user.getJoggers() + 1);
             tv_steps.setText(String.valueOf(user.getSteps()));
             tv_joggers.setText("Joggers  x" + user.getJoggers());
-            bt_joggers.setText(((user.getJoggers() + 1) * 300) * (double)(1 + (user.getJoggers() / 4)) + "");
+            bt_joggers.setText(format.format(((user.getJoggers() + 1) * 300) * (double)(1 + (user.getJoggers() / 4))) + "");
         }
     }
     public void upgradeCoolBreeze (View view) {
@@ -386,7 +390,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             user.setCoolBreeze(user.getCoolBreeze() + 1);
             tv_steps.setText(String.valueOf(user.getSteps()));
             tv_breeze.setText("Cool Breeze  x" + user.getCoolBreeze());
-            bt_breeze.setText(((user.getCoolBreeze() + 1) * 500) * (double)(1 + (user.getCoolBreeze() / 3)) + "");
+            bt_breeze.setText(format.format(((user.getCoolBreeze() + 1) * 500) * (double)(1 + (user.getCoolBreeze() / 3))) + "");
         }
     }
 
