@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Idle Runner</string>
+    <string name="steps">Steps:</string>
+    <string name="buy">Buy</string>
+    <string name="upgrade">Upgrade</string>
+    <string name="runningShoes">Running Shoes</string>
+    <string name="energyDrink">Energy Drink</string>
+    <string name="joggers">Joggers</string>
+    <string name="coolBreeze">Cool Breeze</string>
+
+
+</resources>
