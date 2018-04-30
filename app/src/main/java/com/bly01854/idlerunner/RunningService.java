@@ -78,7 +78,6 @@ public class RunningService extends Service implements SensorEventListener{
 
     @Override
     public void onDestroy(){
-        Toast.makeText(this, "Steps taken: " + steps, Toast.LENGTH_LONG);
         sendBroadcast();
         System.out.println("Stopping service");
         sensorManager.unregisterListener(this, countSensor);

@@ -88,7 +88,8 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_weight="0"
-                    android:background="@android:drawable/ic_menu_help" />
+                    android:background="@android:drawable/ic_menu_help"
+                    android:onClick="helpShoes" />
 
                 <Button
                     android:id="@+id/running_shoes_button"
@@ -123,7 +124,8 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_weight="0"
-                    android:background="@android:drawable/ic_menu_help" />
+                    android:background="@android:drawable/ic_menu_help"
+                    android:onClick="helpEnergy" />
 
                 <Button
                     android:id="@+id/energy_drink_button"
@@ -157,7 +159,8 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_weight="0"
-                    android:background="@android:drawable/ic_menu_help" />
+                    android:background="@android:drawable/ic_menu_help"
+                    android:onClick="helpJoggers" />
 
                 <Button
                     android:id="@+id/joggers_button"
@@ -192,7 +195,8 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_weight="0"
-                    android:background="@android:drawable/ic_menu_help" />
+                    android:background="@android:drawable/ic_menu_help"
+                    android:onClick="helpBreeze" />
 
                 <Button
                     android:id="@+id/breeze_button"
@@ -218,7 +222,7 @@
                     android:layout_weight="0.8"
                     android:gravity="center_vertical"
                     android:paddingStart="16dp"
-                    android:text="@string/upgrade"
+                    android:text="Upgrade Placeholder"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -309,4 +313,5 @@
         android:enabled="false"
         android:onClick="activateEnergyDrink"
         android:text="Energy Drink" />
+
 </RelativeLayout>

@@ -2,6 +2,7 @@ package com.bly01854.idlerunner;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
@@ -11,6 +12,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     // Energy Drink Variables
     Button bt_activateEnergy;
-    boolean energyDrinkActive;
+    boolean energyDrinkActive = false;
     int activeSteps;
     int cooldownSteps;
 
@@ -147,18 +149,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         this.startService(intent);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Intent intent = new Intent(this, RunningService.class);
-        this.stopService(intent);
-        // Receive service steps
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter("message"));
-        updateSteps = new UpdateTask();
-        updateSteps.execute();
-    }
-
-
     // Calculate steps
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
@@ -236,18 +226,40 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     // To create initial user object
     public class CreateUserTask extends AsyncTask<Void, Void, Void>{
 
+        boolean firstTimeUser = false;
+
         CreateUserTask() {}
 
         @Override
         protected Void doInBackground(Void... voids) {
-            User user = null;
+            User user;
             user = existTest(AppDatabase.getAppDatabase(MainActivity.this));
             //deleteUser(AppDatabase.getAppDatabase(MainActivity.this), user);
             if (user == null) {
+                firstTimeUser = true;
                 createUser(AppDatabase.getAppDatabase(MainActivity.this));
             }
             return null;
         }
+        @Override
+        protected void onPostExecute(Void result) {
+            if (firstTimeUser) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Welcome to Idle Runner!")
+                        .setMessage("Try to get as many steps as you can (yes, actual steps)! Once you " +
+                                "accumulate enough steps, use those to buy upgrades below and increase " +
+                                "the amount of steps you can get!")
+                        .setPositiveButton("Start Running!", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+
+            }
+        }
+
 
         private void createUser(AppDatabase db) {
             User user = new User(1, 0, 0, 0, 0, 0);
@@ -276,6 +288,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             if (cooldownSteps > 800)
                 bt_activateEnergy.setEnabled(true);
 
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder
+                    .setMessage("You generated " + serviceSteps + " steps while you were gone!")
+                    .setPositiveButton("Keep Running!", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+
             user.setSteps(user.getSteps() + serviceSteps);
             updateSteps = new UpdateTask();
             updateSteps.execute();
@@ -286,25 +309,25 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     // UPGRADE STEP CALCULATION METHOD
     public void stepCalculator () {
         int shoes = user.getRunningShoes() + 1;
-        int joggers = ((user.getJoggers() + 1) * 10) / 10;
+        double joggers = 1+(user.getJoggers()*.1);
         int breezes = (user.getCoolBreeze()) * 20;
         int randomNum = ThreadLocalRandom.current().nextInt(0, 101);
 
         activeSteps++;
         cooldownSteps++;
 
-        int step = (1 * shoes) * joggers;
+        double step = (1 * shoes) * joggers;
 
 
         if (energyDrinkActive == true) {
             step = step * 2;
         }
 
-        if (randomNum <= 5 && user.getCoolBreeze()>0) {
+        if (randomNum <= 4 && user.getCoolBreeze()>0) {
             step = step * breezes;
         }
 
-        user.setSteps(user.getSteps() + step);
+        user.setSteps((int)(user.getSteps() + step));
 
         tv_steps.setText(String.valueOf(user.getSteps()));
     }
@@ -323,8 +346,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             public void run() {
                 activeSteps = 0;
                 System.out.println("Running active!");
+                int activationPeriod = user.getEnergyDrink() * 25;
 
-                while (activeSteps < user.getEnergyDrink() * 50) {
+                while (activeSteps < activationPeriod) {
 
                 }
                 System.out.println("Running inactive!");
@@ -392,6 +416,67 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             tv_breeze.setText("Cool Breeze  x" + user.getCoolBreeze());
             bt_breeze.setText(format.format(((user.getCoolBreeze() + 1) * 500) * (double)(1 + (user.getCoolBreeze() / 3))) + "");
         }
+    }
+
+
+    // ***UPGRADES HELP METHODS***
+
+    public void helpShoes(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Running Shoes")
+                .setMessage("Upgrading your running shoes increases each step by one. So far your running " +
+                        "shoes generate " + user.getRunningShoes() + " extra steps.")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public void helpEnergy(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Energy Drink")
+                .setMessage("Energy drink multiplies your steps generated by two. It must be activated " +
+                        "and has a cooldown of 800 actual steps. Energy drink lasts for " +
+                        user.getEnergyDrink() * 25 + " actual steps.")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public void helpJoggers(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Joggers")
+                .setMessage("Upgrading your joggers provides a small multiplier to your steps. So far your joggers " +
+                        "generate " + (double)(1+(user.getRunningShoes()*.1)) + "x extra steps.")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public void helpBreeze(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Running Shoes")
+                .setMessage("Provides a small chance for a breeze to cool you off, greatly multiplying your " +
+                        "steps. Cool breeze has a four percent chance to activate on your step and the current " +
+                        "multiplier is " + user.getCoolBreeze() *20 + "x.")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
 
