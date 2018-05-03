@@ -13,6 +13,7 @@ import com.bly01854.idlerunner.entity.User;
  * Created by bly01854 on 4/17/2018.
  */
 
+// Data access object for user saving
 @Dao
 public interface UserDao {
 

@@ -18,13 +18,9 @@ import com.bly01854.idlerunner.database.AppDatabase;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-/**
- * Created by bly01854 on 4/13/2018.
- *
- * TODO
- * Fix multiple broadcast received
- */
 
+// Service to run in background when app calls onPause
+// Generates steps in the background then returns back to main activity when app calls onResume
 public class RunningService extends Service implements SensorEventListener{
 
 

@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     DecimalFormat format = new DecimalFormat("0.#");
 
 
+    // Intialize text views
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -288,6 +289,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             if (cooldownSteps > 800)
                 bt_activateEnergy.setEnabled(true);
 
+            // Alert user of steps gained
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder
                     .setMessage("You generated " + serviceSteps + " steps while you were gone!")
@@ -311,6 +313,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         int shoes = user.getRunningShoes() + 1;
         double joggers = 1+(user.getJoggers()*.1);
         int breezes = (user.getCoolBreeze()) * 20;
+        // RNG for Cool breeze upgrade
         int randomNum = ThreadLocalRandom.current().nextInt(0, 101);
 
         activeSteps++;
@@ -384,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             user.setRunningShoes(user.getRunningShoes() + 1);
             tv_steps.setText(String.valueOf(user.getSteps()));
             tv_shoes.setText("Running Shoes  x" + user.getRunningShoes());
-            bt_shoes.setText(format.format(((user.getRunningShoes() + 1) * 30) * (double)(1 + (user.getRunningShoes() / 5))) + "");
+            bt_shoes.setText(format.format((double)((user.getRunningShoes() + 1) * 30) * (1 + (user.getRunningShoes() / 5))) + "");
         }
 
     }

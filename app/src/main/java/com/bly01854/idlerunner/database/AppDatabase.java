@@ -11,6 +11,7 @@ import com.bly01854.idlerunner.entity.User;
 /**
  * Created by bly01854 on 4/17/2018.
  */
+// Database
 @Database(entities = {User.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
 
