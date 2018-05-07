@@ -350,6 +350,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 activeSteps = 0;
                 System.out.println("Running active!");
                 int activationPeriod = user.getEnergyDrink() * 25;
+                energyDrinkActive = true;
 
                 while (activeSteps < activationPeriod) {
 
